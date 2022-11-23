@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <style>
+        @media only screen and (max-width: 1000px) {
+            .wrapper {
+                padding-top: 30%;
+            }
+        }
+        .wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .control {
+            padding: 100px;
+            margin: 5%;
+            font-size: 60px;
+            min-height: 300px;
+            min-width: 300px;
+        }
+        .control:focus {
+            background-color:yellow;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+    <div></div>
+    <!--<button class="control" onclick="actionRequest('forward')">-->
+    <button id="forwardButton" class="control" disabled>
+    </button>
+    <div></div>
+
+    <!--<button class="control" onclick="actionRequest('left')">-->
+    <button id="leftButton" class="control" disabled>
+    </button>
+
+    <!--<button id="stop" class="control" onclick="actionRequest('stop')">-->
+    <button id="buzzer" class="control" onclick="actionRequest('buzzer')">
+    </button>
+
+    <!--<button class="control" onclick="actionRequest('right')">-->
+    <button id="rightButton" class="control" disabled>
+    </button>
+
+    <div></div>
+    <!--<button class="control" onclick="actionRequest('backward')">-->
+    <button id="backwardButton" class="control" disabled>
+    </button>
+    <div></div>
+</div>
+
+<script>
+    const request = new XMLHttpRequest();
+    const baseUrl = 'http://192.168.4.1';
+
+    function actionRequest(path) {
+        console.log("GET", `${baseUrl}/${path}`);
+
+        request.open("GET", `${baseUrl}/${path}`);
+        request.send();
+
+        console.log('Going:', path);
+    }
+
+    (function () {
+      const STOP = "stop";
+      const FORWARD = "forward";
+      const BACKWARD = "backward";
+      const LEFT = "left";
+      const RIGHT = "right";
+
+      const forwardButton = document.querySelector("#forwardButton");
+      const backwardButton = document.querySelector("#backwardButton");
+      const leftButton = document.querySelector("#leftButton");
+      const rightButton = document.querySelector("#rightButton");
+
+      const drive = (direction) => {
+        console.log("drive()->" + direction);
+        const request = new XMLHttpRequest();
+        const baseUrl = 'http://192.168.4.1';
+
+        request.open("GET", `${baseUrl}/${direction}`);
+        request.send();
+      };
+
+      forwardButton.addEventListener("touchstart", () => drive(FORWARD));
+      forwardButton.addEventListener("touchend", () => drive(STOP));
+      backwardButton.addEventListener("touchstart", () => drive(BACKWARD));
+      backwardButton.addEventListener("touchend", () => drive(STOP));
+
+      leftButton.addEventListener("touchstart", () => drive(LEFT));
+      leftButton.addEventListener("touchend", () => drive(STOP));
+      rightButton.addEventListener("touchstart", () => drive(RIGHT));
+      rightButton.addEventListener("touchend", () => drive(STOP));
+    })();
+</script>
+</body>
+
+</html>
